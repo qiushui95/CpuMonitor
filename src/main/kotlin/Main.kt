@@ -65,4 +65,6 @@ private fun shutdown() {
         .append("\n")
 
     logFile.appendText(logBuilder.toString())
+
+    Runtime.getRuntime().exec("sudo shutdown").waitFor()
 }
