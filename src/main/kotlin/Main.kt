@@ -47,7 +47,7 @@ fun main() = runBlocking<Unit>(Dispatchers.IO) {
             idleTimes = 0
         }
 
-        if (idleTimes > 60 * 2) {
+        if (idleTimes > 60 * 60) {
             shutdown()
             break
         }
