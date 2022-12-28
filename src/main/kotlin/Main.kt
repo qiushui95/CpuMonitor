@@ -3,16 +3,20 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import java.io.File
 import java.lang.management.ManagementFactory
+import java.util.*
 
 private val logDir = File("/var/log/cpu_monitor")
 
-private val logName=DateTime.now().toString("yyyy_MM-dd_HH_mm_ss_SSS")
+private val logName = now().toString("yyyy_MM-dd_HH_mm_ss_SSS")
 
 private val logFile = File(logDir, "$logName.log")
 
 private var idleTimes = 0
+
+private fun now() = DateTime.now(DateTimeZone.forTimeZone(TimeZone.getTimeZone("Asia/Shanghai")))
 
 fun main() = runBlocking<Unit>(Dispatchers.IO) {
     if (!logDir.exists()) logDir.mkdirs()
@@ -29,7 +33,7 @@ fun main() = runBlocking<Unit>(Dispatchers.IO) {
 
         val logBuilder = StringBuilder()
 
-        logBuilder.append(DateTime.now().toString("yyyy-MM-dd HH:mm:ss"))
+        logBuilder.append(now().toString("yyyy-MM-dd HH:mm:ss"))
             .append("-->")
             .append(systemCpuLoad)
             .append("%")
@@ -55,7 +59,7 @@ fun main() = runBlocking<Unit>(Dispatchers.IO) {
 private fun shutdown() {
     val logBuilder = StringBuilder()
 
-    logBuilder.append(DateTime.now().toString("yyyy-MM-dd HH:mm:ss"))
+    logBuilder.append(now().toString("yyyy-MM-dd HH:mm:ss"))
         .append("-->")
         .append("shutdown")
         .append("\n")
