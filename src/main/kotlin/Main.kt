@@ -14,9 +14,9 @@ private val logName = now().toString("yyyy_MM-dd_HH_mm_ss_SSS")
 
 private val logFile = File(logDir, "$logName.log")
 
-private var idleTimes = 0
-
 private fun now() = DateTime.now(DateTimeZone.forTimeZone(TimeZone.getTimeZone("Asia/Shanghai")))
+
+private val result = mutableListOf<Int>()
 
 fun main() = runBlocking<Unit>(Dispatchers.IO) {
     if (!logDir.exists()) logDir.mkdirs()
@@ -41,13 +41,13 @@ fun main() = runBlocking<Unit>(Dispatchers.IO) {
 
         logFile.appendText(logBuilder.toString())
 
-        if (systemCpuLoad <= 10) {
-            idleTimes++
-        } else {
-            idleTimes = 0
+        if (result.size >= 3600) {
+            result.removeAt(0)
         }
 
-        if (idleTimes > 60 * 60) {
+        result.add(systemCpuLoad)
+
+        if (result.count { it < 20 } > 3600 * 0.9) {
             shutdown()
             break
         }
